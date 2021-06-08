@@ -29,16 +29,24 @@ public class PopulateServiceIT {
         populateService = new PopulateService(personRepository);
     }
 
-    // TODO: maria 08/06/2021  Try maybe with less numberOfperson because of performance
+    // TODO: maria 08/06/2021  Try maybe with less numberOfperson because of performance reasons
     @Test
-    public void generatePersons_shouldGeneratePerson_whichAgeIsGreaterOrEqualThan_givenMinAge() {
+    public void generatePersons_shouldGeneratePerson_whichAgeIsGreaterThanOrEqualTo_givenMinAge() {
         int minAge = 95;
         int maxAge = 105;
 
         List<Person> persons = populateService.generatePersons(10, minAge, maxAge);
 
-        System.out.println(new ArrayList<>(persons));
-
         assertThat(persons, everyItem(hasProperty("age", greaterThanOrEqualTo(minAge))));
+    }
+
+    @Test
+    public void generatePersons_shouldGeneratePerson_whichAgeIsLessThanOrEqualTo_givenMaxAge() {
+        int minAge = 95;
+        int maxAge = 105;
+
+        List<Person> persons = populateService.generatePersons(10, minAge, maxAge);
+
+        assertThat(persons, everyItem(hasProperty("age", lessThanOrEqualTo(maxAge))));
     }
 }

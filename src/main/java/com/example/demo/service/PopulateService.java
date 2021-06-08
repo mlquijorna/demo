@@ -23,17 +23,21 @@ public class PopulateService {
     public List<Person> generatePersons(int numberOfPersons, int minAge, int maxAge) {
         List<Person> randomPersons = new ArrayList<>();
 
-        // TODO: maria 08/06/2021  think better name as i
-        for (int i = 0; i < numberOfPersons; i++) {
-            Person person = Person.builder()
-                    .name("name" + i)
-                    .gender(Gender.NONE)
-                    .surname("surname" + i)
-                    .age(getRandomNumberUsingNextInt(minAge, maxAge))
-                    .build();
+        // TODO: maria 08/06/2021  think better name as index
+        for (int index = 0; index < numberOfPersons; index++) {
+            Person person = createPersonWith(minAge, maxAge, index);
             randomPersons.add(person);
         }
         return personRespository.saveAll(randomPersons);
+    }
+
+    private Person createPersonWith(int minAge, int maxAge, int index) {
+        return Person.builder()
+                .name("name" + index)
+                .gender(Gender.NONE)
+                .surname("surname" + index)
+                .age(getRandomNumberUsingNextInt(minAge, maxAge))
+                .build();
     }
 
     private List<Person> generatechildrenFor(List<Person> parents) {
