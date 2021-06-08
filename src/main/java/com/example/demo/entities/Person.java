@@ -4,6 +4,8 @@ import lombok.Builder;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Builder
 @Entity
@@ -37,9 +39,18 @@ public class Person {
     @Column(nullable = false)
     private Gender gender;
 
-    public void setId(long id) {
-        this.id = id;
-    }
+    @ManyToOne(fetch=FetchType.LAZY)
+    private Person mother;
+
+    @ManyToOne(fetch=FetchType.LAZY)
+    private Person father;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    private List<Person> children;
+
+//    public void setId(long id) {
+//        this.id = id;
+//    }
 
     public void setName(String name) {
         this.name = name;
@@ -75,5 +86,9 @@ public class Person {
 
     public Gender getGender() {
         return gender;
+    }
+
+    public void add(List<Person> childs) {
+        this.children.addAll(childs);
     }
 }
