@@ -33,8 +33,8 @@ public class Person {
 
     //@JoinColumn(name = "id", nullable = true, insertable = false, updatable = false, columnDefinition = "long default null")
     //@ManyToOne(targetEntity = Person.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private long parent_id;
 
+    private long parent_id;
     @OneToMany(fetch = FetchType.LAZY)
     private List<Person> children;
 
@@ -83,6 +83,14 @@ public class Person {
 
     public Gender getGender() {
         return gender;
+    }
+
+    public long getParent_id() {
+        return parent_id;
+    }
+
+    public List<Person> getChildren() {
+        return children;
     }
 
     public void add(List<Person> children) {

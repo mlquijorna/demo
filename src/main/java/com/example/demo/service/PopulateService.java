@@ -20,7 +20,7 @@ public class PopulateService {
         this.personRespository = personRespository;
     }
 
-    public List<Person> generateChildrenFor(int numberOfPersons, int minAge, int maxAge) {
+    public List<Person> generatePersons(int numberOfPersons, int minAge, int maxAge) {
         List<Person> randomPersons = new ArrayList<>();
 
         // TODO: maria 08/06/2021  think better name as index
@@ -33,17 +33,24 @@ public class PopulateService {
 
     public List<Person> generateChildrenFor(List<Person> parents) {
         List<Person> totalChildren = new ArrayList<>();
-        for (Person person : parents) {
-            List<Person> children = generateChildrenFor(person);
+        for (Person parent : parents) {
+            List<Person> children = generateChildrenFor(parent);
             totalChildren.addAll(children);
         }
         return personRespository.saveAll(totalChildren);
     }
 
-    private List<Person> generateChildrenFor(Person person) {
+    private List<Person> generateChildrenFor(Person parent) {
         int numberOfPersons = getRandomNumberUsingNextInt(1, 5);
-        int parentAge = person.getAge();
-        List<Person> childrenToSave = generateChildrenFor(person, numberOfPersons);
+        List<Person> childrenToSave = generateChildrenFor(parent, numberOfPersons);
+        List<Person> children = personRespository.saveAll(childrenToSave);
+        parent.add(children);
+        personRespository.saveAndFlush(parent);
+        return children;
+    }
+
+    private List<Person> generateChildrenFor(int numberOfChildren, Person person) {
+        List<Person> childrenToSave = generateChildrenFor(person, numberOfChildren);
         List<Person> children = personRespository.saveAll(childrenToSave);
         person.add(children);
         personRespository.saveAndFlush(person);
@@ -60,12 +67,9 @@ public class PopulateService {
     }
 
     private Person createPersonWith(Person parent, int indexName) {
-        return Person.builder()
-                .name("name" + indexName)
-                .surname(parent.getSurname())
-                .gender(Gender.NONE)
-                .parent_id(parent.getId())
-                .build();
+        Person person = createPersonWith(parent.getAge() - 35, parent.getAge() + 35, indexName);
+        person.setSurname(parent.getSurname());
+        return person;
     }
 
     private Person createPersonWith(int minAge, int maxAge, int index) {
