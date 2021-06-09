@@ -9,9 +9,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface PersonRespository extends JpaRepository<Person,Long> {
-//
-//    @Query("SELECT * FROM Person p WHERE p.parent_id = :parent_id")
-//    List<Person> findAllSiblings(@Param("parent_id") long parent_id);
+public interface PersonRepository extends JpaRepository<Person,Long> {
+
+    @Query("select p.id from Person p WHERE p.parent_id = :parent_id")
+    List<Long> findAllSiblings(@Param("parent_id") Long parent_id);
 
 }

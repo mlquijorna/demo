@@ -2,7 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.entities.Gender;
 import com.example.demo.entities.Person;
-import com.example.demo.repository.PersonRespository;
+import com.example.demo.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,11 +13,11 @@ import java.util.Random;
 @Service
 public class PopulateService {
 
-    private PersonRespository personRespository;
+    private PersonRepository personRepository;
 
     @Autowired
-    public PopulateService(PersonRespository personRespository) {
-        this.personRespository = personRespository;
+    public PopulateService(PersonRepository personRepository) {
+        this.personRepository = personRepository;
     }
 
     public List<Person> generatePersons(int numberOfPersons, int minAge, int maxAge) {
@@ -28,7 +28,7 @@ public class PopulateService {
             Person person = createPersonWith(minAge, maxAge, index);
             randomPersons.add(person);
         }
-        return personRespository.saveAll(randomPersons);
+        return personRepository.saveAll(randomPersons);
     }
 
     public List<Person> generateChildrenFor(List<Person> parents) {
@@ -37,39 +37,40 @@ public class PopulateService {
             List<Person> children = generateChildrenFor(parent);
             totalChildren.addAll(children);
         }
-        return personRespository.saveAll(totalChildren);
+        return personRepository.saveAll(totalChildren);
     }
 
     private List<Person> generateChildrenFor(Person parent) {
         int numberOfPersons = getRandomNumberUsingNextInt(1, 5);
         List<Person> childrenToSave = generateChildrenFor(parent, numberOfPersons);
-        List<Person> children = personRespository.saveAll(childrenToSave);
+        List<Person> children = personRepository.saveAll(childrenToSave);
         parent.add(children);
-        personRespository.saveAndFlush(parent);
+        personRepository.saveAndFlush(parent);
         return children;
     }
 
     private List<Person> generateChildrenFor(int numberOfChildren, Person person) {
         List<Person> childrenToSave = generateChildrenFor(person, numberOfChildren);
-        List<Person> children = personRespository.saveAll(childrenToSave);
+        List<Person> children = personRepository.saveAll(childrenToSave);
         person.add(children);
-        personRespository.saveAndFlush(person);
+        personRepository.saveAndFlush(person);
         return children;
     }
 
-    private List<Person> generateChildrenFor(Person parent, int numberOfPersons) {
+    public List<Person> generateChildrenFor(Person parent, int numberOfPersons) {
         List<Person> children = new ArrayList<>();
         for (int indexName = 0; indexName < numberOfPersons; indexName++) {
             Person child = createPersonWith(parent, indexName);
             children.add(child);
         }
-        return children;
+        return personRepository.saveAll(children);
     }
 
     private Person createPersonWith(Person parent, int indexName) {
         Person person = createPersonWith(parent.getAge() - 35, parent.getAge() + 35, indexName);
         person.setSurname(parent.getSurname());
-        return person;
+        person.setParent_id(parent.getId());
+        return personRepository.save(person);
     }
 
     private Person createPersonWith(int minAge, int maxAge, int index) {

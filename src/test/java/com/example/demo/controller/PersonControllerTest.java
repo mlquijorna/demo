@@ -2,7 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.entities.Gender;
 import com.example.demo.entities.Person;
-import com.example.demo.repository.PersonRespository;
+import com.example.demo.repository.PersonRepository;
 import com.example.demo.utils.TestUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,7 +32,7 @@ class PersonControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private PersonRespository personRespository;
+    private PersonRepository personRepository;
 
     private Person firstPerson;
     private Person secondPerson;
@@ -45,7 +45,7 @@ class PersonControllerTest {
 
     @Test
     void getPersons() throws Exception {
-        when(personRespository.findAll()).thenReturn(Arrays.asList(firstPerson, secondPerson));
+        when(personRepository.findAll()).thenReturn(Arrays.asList(firstPerson, secondPerson));
 
         mockMvc.perform(get("/api/v1/persons"))
                 .andExpect(status().isOk())
@@ -55,7 +55,7 @@ class PersonControllerTest {
 
     @Test
     void getPersonById() throws Exception {
-        when(personRespository.findById(1L)).thenReturn(ofNullable(firstPerson));
+        when(personRepository.findById(1L)).thenReturn(ofNullable(firstPerson));
 
         mockMvc.perform(get("/api/v1/person/{id}",1L))
                 .andExpect(status().isOk())
@@ -69,7 +69,7 @@ class PersonControllerTest {
     @Test
     void createPerson() throws Exception {
         Person alice = Person.builder().name("Alice").surname("Garcia").age(40).gender(Gender.FEMALE).build();
-        when(personRespository.save(alice)).thenReturn(alice);
+        when(personRepository.save(alice)).thenReturn(alice);
 
         mockMvc.perform(post("/api/v1/person")
                 .contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(alice)))
@@ -81,8 +81,8 @@ class PersonControllerTest {
 
     @Test
     void updatePerson() throws Exception {
-        when(personRespository.findById(1L)).thenReturn(ofNullable(firstPerson));
-        when(personRespository.save(any(Person.class))).thenReturn(secondPerson);
+        when(personRepository.findById(1L)).thenReturn(ofNullable(firstPerson));
+        when(personRepository.save(any(Person.class))).thenReturn(secondPerson);
 
         mockMvc.perform(put("/api/v1/person/{id}",1L)
                 .contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(secondPerson)))
@@ -93,11 +93,11 @@ class PersonControllerTest {
 
     @Test
     void deletePerson() throws Exception {
-        when(personRespository.findById(1L)).thenReturn(ofNullable(firstPerson));
+        when(personRepository.findById(1L)).thenReturn(ofNullable(firstPerson));
 
         mockMvc.perform(delete("/api/v1/person/{id}",1L))
                 .andExpect(status().isOk());
 
-        verify(personRespository,times(1)).delete(firstPerson);
+        verify(personRepository,times(1)).delete(firstPerson);
     }
 }

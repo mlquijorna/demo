@@ -2,7 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.entities.Gender;
 import com.example.demo.entities.Person;
-import com.example.demo.repository.PersonRespository;
+import com.example.demo.repository.PersonRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,7 +21,7 @@ import static org.hamcrest.Matchers.*;
 @SpringBootTest
 public class PopulateServiceIT {
     @Autowired
-    private PersonRespository personRepository;
+    private PersonRepository personRepository;
 
     @Autowired
     private PopulateService populateService;
