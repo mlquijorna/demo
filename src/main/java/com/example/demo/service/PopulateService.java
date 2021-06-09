@@ -78,6 +78,7 @@ public class PopulateService {
                 .name("name" + index)
                 .gender(Gender.NONE)
                 .surname("surname" + index)
+                .children(new ArrayList<>())
                 .age(getRandomNumberUsingNextInt(minAge, maxAge))
                 .build();
     }

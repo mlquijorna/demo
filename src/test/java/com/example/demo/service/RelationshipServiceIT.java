@@ -9,10 +9,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -62,5 +67,20 @@ public class RelationshipServiceIT {
         int degreeRelationShip = relationshipService.getDegreeRelationShip(father, grandChild);
 
         assertThat(degreeRelationShip, equalTo(2));
+    }
+
+    @Test
+    public void collectGroupOfSiblings_shouldReturnAllGroupsOfSiblings() {
+        List<Person> firstGeneration = populateService.generatePersons(50, 95, 105);
+        List<Person> secondGeneration = populateService.generateChildrenFor(firstGeneration);
+        List<Person> thirdGeneration = populateService.generateChildrenFor(secondGeneration);
+        List<Person> allPopulation = new ArrayList<>();
+        Stream.of(firstGeneration, secondGeneration, thirdGeneration).forEach(allPopulation::addAll);;
+        List<Person> personWithAgeLessOrEqualToTen = allPopulation.stream().filter(p -> p.getAge() < 10).collect(Collectors.toList());
+
+        Set<List<Person>> groupOfSiblings = relationshipService.collectGroupOfSiblings(personWithAgeLessOrEqualToTen);
+
+
+        assertThat(groupOfSiblings.size(), is(0));
     }
 }
