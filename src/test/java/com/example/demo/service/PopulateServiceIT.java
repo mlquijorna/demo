@@ -54,7 +54,6 @@ public class PopulateServiceIT {
         assertThat(persons, everyItem(hasProperty("age", lessThanOrEqualTo(maxAge))));
     }
 
-    @Ignore
     @Test
     public void generateChildrenFor_shouldGenerateChildren_whichAgeIsGreaterThanOrEqualTo_parentAgeMinus5() {
         List<Person> parents = Collections.singletonList(Person.builder()
