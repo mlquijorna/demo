@@ -62,7 +62,7 @@ public class Person {
         this.age = age;
     }
 
-    public void setParent_id(long parent_id) {
+    public void setParentId(long parent_id) {
         this.parent_id = parent_id;
     }
 
