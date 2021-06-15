@@ -13,6 +13,7 @@ import java.util.Random;
 @Service
 public class PopulateService {
 
+    private static final int AGE_GENERATION_DIFFERENCE = 35;
     private PersonRepository personRepository;
 
     @Autowired
@@ -57,9 +58,9 @@ public class PopulateService {
         return children;
     }
 
-    public List<Person> generateChildrenFor(Person parent, int numberOfPersons) {
+    public List<Person> generateChildrenFor(Person parent, int numberOfChildren) {
         List<Person> children = new ArrayList<>();
-        for (int indexName = 0; indexName < numberOfPersons; indexName++) {
+        for (int indexName = 0; indexName < numberOfChildren; indexName++) {
             Person child = createPersonWith(parent, indexName);
             children.add(child);
         }
@@ -67,9 +68,9 @@ public class PopulateService {
     }
 
     private Person createPersonWith(Person parent, int indexName) {
-        Person person = createPersonWith(parent.getAge() - 35, parent.getAge() + 35, indexName);
+        Person person = createPersonWith(parent.getAge() - AGE_GENERATION_DIFFERENCE, parent.getAge() + 35, indexName);
         person.setSurname(parent.getSurname());
-        person.setParent_id(parent.getId());
+        person.setParentId(parent.getId());
         return personRepository.save(person);
     }
 
