@@ -27,6 +27,7 @@ public class RelationshipService {
             return 1;
         }
 
+        // TODO: maria 15/06/2021 rename to areGranFatherAndGrandChild
         if (areGrandFatherAndChild(firstPerson, secondPerson) || areGrandFatherAndChild(secondPerson, firstPerson)) {
             return 2;
         }
@@ -43,11 +44,13 @@ public class RelationshipService {
                 ArrayList<Person> siblings = new ArrayList<>();
                 persons.stream().filter(p -> areSiblings(p, person)).forEach(p-> {siblings.add(p);personSet.remove(p);});
                 groupOfSibling.add(siblings);
+                personSet.remove(person);
             }
         }
         return groupOfSibling;
     }
 
+    // TODO: maria 15/06/2021  Refactor only needs one return
     private boolean areGrandFatherAndChild(Person firstPerson, Person secondPerson) {
         Optional<Person> optionalFather = personRepository.findById(secondPerson.getParent_id());
 

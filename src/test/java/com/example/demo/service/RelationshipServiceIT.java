@@ -70,17 +70,41 @@ public class RelationshipServiceIT {
     }
 
     @Test
-    public void collectGroupOfSiblings_shouldReturnAllGroupsOfSiblings() {
+    public void collectGroupOfSiblings_shouldReturnAllGroupsOfSiblings_whenAgeIsLessOrEqualToTen() {
         List<Person> firstGeneration = populateService.generatePersons(50, 95, 105);
         List<Person> secondGeneration = populateService.generateChildrenFor(firstGeneration);
         List<Person> thirdGeneration = populateService.generateChildrenFor(secondGeneration);
         List<Person> allPopulation = new ArrayList<>();
         Stream.of(firstGeneration, secondGeneration, thirdGeneration).forEach(allPopulation::addAll);;
-        List<Person> personWithAgeLessOrEqualToTen = allPopulation.stream().filter(p -> p.getAge() < 10).collect(Collectors.toList());
+        List<Person> personWithAgeLessOrEqualToTen = allPopulation.stream().filter(p -> p.getAge() <= 10).collect(Collectors.toList());
+        System.out.println(personWithAgeLessOrEqualToTen.size());
 
         Set<List<Person>> groupOfSiblings = relationshipService.collectGroupOfSiblings(personWithAgeLessOrEqualToTen);
 
 
         assertThat(groupOfSiblings.size(), is(0));
+    }
+
+    @Test
+    public void collectGroupOfSiblings_shouldReturnAllGroupsOfSiblings_whenAgeisLessOrEqualto35() {
+        List<Person> firstGeneration = populateService.generatePersons(50, 95, 105);
+        System.out.println("These are the persons of the first generation " + firstGeneration.size() + firstGeneration);
+
+        List<Person> secondGeneration = populateService.generateChildrenFor(firstGeneration);
+        System.out.println("These are the persons of the second generation " + secondGeneration.size() + secondGeneration);
+
+        List<Person> thirdGeneration = populateService.generateChildrenFor(secondGeneration);
+        System.out.println("These are the persons of the third generation " + thirdGeneration.size() + thirdGeneration);
+
+        List<Person> allPopulation = new ArrayList<>();
+        Stream.of(firstGeneration, secondGeneration, thirdGeneration).forEach(allPopulation::addAll);;
+        List<Person> personWithAgeLessOrEqualTo35 = allPopulation.stream().filter(p -> p.getAge() <= 30).collect(Collectors.toList());
+
+        Set<List<Person>> groupOfSiblings = relationshipService.collectGroupOfSiblings(personWithAgeLessOrEqualTo35);
+        System.out.println("These are the person with age less than 35: " + personWithAgeLessOrEqualTo35.size() +personWithAgeLessOrEqualTo35);
+        System.out.println("These are the siblings: " + groupOfSiblings.size()+ groupOfSiblings);
+
+
+        assertThat(groupOfSiblings.size(), greaterThanOrEqualTo(3));
     }
 }

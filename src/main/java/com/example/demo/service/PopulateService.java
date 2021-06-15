@@ -68,7 +68,7 @@ public class PopulateService {
     }
 
     private Person createPersonWith(Person parent, int indexName) {
-        Person person = createPersonWith(parent.getAge() - AGE_GENERATION_DIFFERENCE, parent.getAge() + 35, indexName);
+        Person person = createPersonWith(parent.getAge() - AGE_GENERATION_DIFFERENCE, parent.getAge() - 30, indexName);
         person.setSurname(parent.getSurname());
         person.setParentId(parent.getId());
         return personRepository.save(person);

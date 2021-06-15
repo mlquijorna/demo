@@ -85,7 +85,7 @@ public class PopulateServiceIT {
         List<Person> children = populateService.generateChildrenFor(parents);
 
         int givenMaxAge = 70;
-        assertThat(children,everyItem(hasProperty("age",greaterThanOrEqualTo(givenMaxAge))));
+        assertThat(children,everyItem(hasProperty("age",lessThanOrEqualTo(givenMaxAge))));
     }
 
 }

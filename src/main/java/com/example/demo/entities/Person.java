@@ -47,6 +47,8 @@ public class Person {
                 ", surname='" + surname + '\'' +
                 ", age=" + age +
                 ", gender=" + gender +
+                ", parent_id=" + parent_id +
+                ", children=" + children +
                 '}';
     }
 
