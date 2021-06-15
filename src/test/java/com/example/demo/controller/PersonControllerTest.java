@@ -15,6 +15,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
 import static org.hamcrest.Matchers.hasSize;
@@ -57,13 +58,21 @@ class PersonControllerTest {
     void getPersonById() throws Exception {
         when(personRepository.findById(1L)).thenReturn(ofNullable(firstPerson));
 
-        mockMvc.perform(get("/api/v1/person/{id}",1L))
+        mockMvc.perform(get("/api/v1/person/{id}", 1L))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(1)))
-                .andExpect(jsonPath("$.name",is("Maria")))
-                .andExpect(jsonPath("$.surname",is("Lopez")))
-                .andExpect(jsonPath("$.age",is(23)))
-                .andExpect(jsonPath("$.gender",is("FEMALE")));
+                .andExpect(jsonPath("$.name", is("Maria")))
+                .andExpect(jsonPath("$.surname", is("Lopez")))
+                .andExpect(jsonPath("$.age", is(23)))
+                .andExpect(jsonPath("$.gender", is("FEMALE")));
+    }
+
+    @Test
+    void getPersonById_throwsException() throws Exception {
+        when(personRepository.findById(1L)).thenReturn(Optional.empty());
+
+        mockMvc.perform(get("/api/v1/person/{id}", 1L))
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -75,7 +84,7 @@ class PersonControllerTest {
                 .contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(alice)))
                 .andExpect(status().isCreated())
                 .andDo(print())
-                .andExpect(jsonPath("$.name",is("Alice")));
+                .andExpect(jsonPath("$.name", is("Alice")));
 
     }
 
@@ -84,10 +93,10 @@ class PersonControllerTest {
         when(personRepository.findById(1L)).thenReturn(ofNullable(firstPerson));
         when(personRepository.save(any(Person.class))).thenReturn(secondPerson);
 
-        mockMvc.perform(put("/api/v1/person/{id}",1L)
+        mockMvc.perform(put("/api/v1/person/{id}", 1L)
                 .contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(secondPerson)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.surname",is("Kriel")));
+                .andExpect(jsonPath("$.surname", is("Kriel")));
 
     }
 
@@ -95,9 +104,9 @@ class PersonControllerTest {
     void deletePerson() throws Exception {
         when(personRepository.findById(1L)).thenReturn(ofNullable(firstPerson));
 
-        mockMvc.perform(delete("/api/v1/person/{id}",1L))
+        mockMvc.perform(delete("/api/v1/person/{id}", 1L))
                 .andExpect(status().isOk());
 
-        verify(personRepository,times(1)).delete(firstPerson);
+        verify(personRepository, times(1)).delete(firstPerson);
     }
 }

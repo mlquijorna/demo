@@ -13,7 +13,6 @@ public class RelationshipService {
 
     private PersonRepository personRepository;
 
-
     @Autowired
     public RelationshipService(PersonRepository personRepository) {
         this.personRepository = personRepository;

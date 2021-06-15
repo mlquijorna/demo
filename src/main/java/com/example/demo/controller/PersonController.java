@@ -3,8 +3,10 @@ package com.example.demo.controller;
 import com.example.demo.entities.Person;
 import com.example.demo.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
@@ -31,7 +33,7 @@ public class PersonController {
     @GetMapping("/person/{id}")
     public ResponseEntity<Person> getPersonById(@PathVariable(value = "id") Long personId) {
         Person person = personRepository.findById(personId)
-                .orElseThrow(NoSuchElementException::new);
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "person with id" + personId + "does not exist"));
         return ResponseEntity.ok().body(person);
     }
 
